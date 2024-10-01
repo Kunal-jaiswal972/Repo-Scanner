@@ -1,6 +1,7 @@
 import cors from "cors";
 import morgan from "morgan";
 import express from "express";
+import path from "path";
 import { config } from "dotenv";
 
 import scanRoutes from "./routes/scan.route.js";
@@ -19,8 +20,11 @@ app.use(
 app.use(morgan("dev"));
 app.use("/api/v1", scanRoutes);
 
+const frontendPath = path.resolve(process.cwd(), "./frontend/dist");
+app.use(express.static(frontendPath));
+
 app.get("/", (req, res) => {
-  res.status(201).json("hi from server");
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
 
 app.listen(PORT, () => console.log(`Server Open On http://localhost:${PORT}`));
